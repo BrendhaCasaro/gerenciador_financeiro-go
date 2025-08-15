@@ -4,4 +4,8 @@ type TransactionStore struct {
 	store []Transaction
 }
 
-func Insert(transaction Transaction)
+var ts TransactionStore
+
+func Insert(transaction Transaction) {
+	ts.store = append(ts.store, transaction)
+}
