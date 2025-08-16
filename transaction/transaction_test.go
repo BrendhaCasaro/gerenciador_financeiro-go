@@ -13,3 +13,6 @@ func TestTransaction(t *testing.T) {
 		t.Fatalf("Expected id have a something different of nil")
 	}
 }
+
+// testar name, campos que recebem valores de outras de fora
+// testar delete

@@ -10,7 +10,7 @@ func TestInsert(t *testing.T) {
 	ts := TransactionStore{}
 	ts.Insert(NewTransaction("teste", "teste", 100, time.Now()))
 
-	if ts.store == nil {
+	if len(ts.store) == 0 {
 		t.Fatalf("The fields of transaction should not be nil")
 	}
 }
@@ -22,7 +22,11 @@ func TestSearchById(t *testing.T) {
 	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
 
 	transactionSearch := ts.store[1].Id
-	transactionFound := ts.SearchById(transactionSearch)
+	transactionFound, err := ts.SearchById(transactionSearch)
+
+	if err != nil {
+		t.Fatalf("Have a error")
+	}
 
 	if transactionFound.Id != transactionSearch {
 		t.Fatalf("The ID founded is different of ID/transaction wanted")
