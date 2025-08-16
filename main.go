@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/BrendhaCasaro/gerenciador_financeiro-go/transaction"
 	"time"
+
+	"github.com/BrendhaCasaro/gerenciador_financeiro-go/transaction"
 )
 
 func main() {
-	transaction.Insert(transaction.NewTransaction("teste", "teste", 100, time.Now()))
+	ts := transaction.TransactionStore{}
+	ts.Insert(transaction.NewTransaction("teste", "teste", 100, time.Now()))
 }
