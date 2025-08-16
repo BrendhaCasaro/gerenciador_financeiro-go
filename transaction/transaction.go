@@ -6,28 +6,28 @@ import (
 )
 
 type Transaction struct {
-	id          uuid.UUID
-	name        string
-	description string
-	value       float64
-	insertedAt  time.Time
-	realizedAt  time.Time
-	deletedAt   time.Time
+	Id          uuid.UUID
+	Name        string
+	Description string
+	Value       float64
+	InsertedAt  time.Time
+	RealizedAt  time.Time
+	DeletedAt   time.Time
 }
 
 func NewTransaction(name string, description string, value float64, realizedAt time.Time) Transaction {
 	return Transaction{
-		id:          uuid.New(),
-		name:        name,
-		description: description,
-		value:       value,
-		insertedAt:  time.Now(),
-		realizedAt:  realizedAt,
+		Id:          uuid.New(),
+		Name:        name,
+		Description: description,
+		Value:       value,
+		InsertedAt:  time.Now(),
+		RealizedAt:  realizedAt,
 	}
 }
 
 func Delete() Transaction {
 	return Transaction{
-		deletedAt: time.Now(),
+		DeletedAt: time.Now(),
 	}
 }

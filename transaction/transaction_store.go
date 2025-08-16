@@ -1,12 +1,18 @@
 package transaction
 
 import (
+	"encoding/json"
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
 type TransactionStore struct {
 	store []Transaction
+}
+
+func (ts *TransactionStore) MarshalJson(transaction Transaction) ([]byte, error) {
+	return json.Marshal(transaction)
 }
 
 func (ts *TransactionStore) Insert(transaction Transaction) {
@@ -16,9 +22,7 @@ func (ts *TransactionStore) Insert(transaction Transaction) {
 
 func (ts *TransactionStore) SearchById(id uuid.UUID) Transaction {
 	for _, transaction := range ts.store {
-		if transaction.id == id {
-			// fmt.Printf("%T\n", transaction.id)
-			// fmt.Printf("%T\n", id)
+		if transaction.Id == id {
 			return transaction
 		}
 	}

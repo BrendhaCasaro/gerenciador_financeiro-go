@@ -9,7 +9,7 @@ import (
 func TestTransaction(t *testing.T) {
 	transaction := NewTransaction("teste", "teste", 244, time.Now())
 
-	if transaction.id == uuid.Nil {
+	if transaction.Id == uuid.Nil {
 		t.Fatalf("Expected id have a something different of nil")
 	}
 }
