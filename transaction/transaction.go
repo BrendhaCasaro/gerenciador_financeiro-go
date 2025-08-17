@@ -1,8 +1,9 @@
 package transaction
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Transaction struct {
@@ -26,8 +27,6 @@ func NewTransaction(name string, description string, value float64, realizedAt t
 	}
 }
 
-func Delete() Transaction {
-	return Transaction{
-		DeletedAt: time.Now(),
-	}
+func (t *Transaction) Delete() {
+	t.DeletedAt = time.Now()
 }

@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"testing"
 	"time"
 )
@@ -23,7 +22,6 @@ func TestSearchById(t *testing.T) {
 
 	transactionSearch := ts.store[1].Id
 	transactionFound, err := ts.SearchById(transactionSearch)
-
 	if err != nil {
 		t.Fatalf("Have a error")
 	}
@@ -39,9 +37,6 @@ func TestMarshalJson(t *testing.T) {
 	transactionJson, err := ts.MarshalJson(transaction)
 
 	if transactionJson == nil {
-		t.Fatalf("The transaction was not converted for a JSON")
-		fmt.Println(err)
-	} else {
-		fmt.Println(string(transactionJson))
+		t.Fatalf("The transaction was not converted for a JSON: %v", err)
 	}
 }
