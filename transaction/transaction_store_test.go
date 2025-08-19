@@ -1,13 +1,29 @@
 package transaction
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
 
+func TestMarshalJson(t *testing.T) {
+	ts := TransactionStore{}
+	tx := NewTransaction("teste", "teste", 100, time.Now())
+	ts.Insert(tx)
+
+	storeJson, err := ts.MarshalJson()
+
+	fmt.Println(string(storeJson))
+
+	if err != nil {
+		t.Fatalf("The slice was not converted for a JSON: %v", err)
+	}
+}
+
 func TestInsert(t *testing.T) {
 	ts := TransactionStore{}
 	ts.Insert(NewTransaction("teste", "teste", 100, time.Now()))
+	fmt.Print(ts.store[0])
 
 	if len(ts.store) == 0 {
 		t.Fatalf("The fields of transaction should not be nil")
@@ -23,21 +39,11 @@ func TestSearchById(t *testing.T) {
 	transactionSearch := ts.store[1].Id
 	transactionFound, err := ts.SearchById(transactionSearch)
 	if err != nil {
-		t.Fatalf("Have a error")
+		t.Fatalf("Have a error: %v", err)
 	}
 
 	if transactionFound.Id != transactionSearch {
 		t.Fatalf("The ID founded is different of ID/transaction wanted")
-	}
-}
-
-func TestMarshalJson(t *testing.T) {
-	ts := TransactionStore{}
-	transaction := NewTransaction("teste", "teste", 100, time.Now())
-	transactionJson, err := ts.MarshalJson(transaction)
-
-	if transactionJson == nil {
-		t.Fatalf("The transaction was not converted for a JSON: %v", err)
 	}
 }
 
@@ -46,6 +52,10 @@ func TestTotalAmount(t *testing.T) {
 
 	ts.Insert(NewTransaction("teste1", "teste1", 100, time.Now()))
 	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
+	tx := NewTransaction("teste3", "teste3", 100, time.Now())
+	ts.Insert(tx)
+
+	tx.Delete()
 
 	if ts.TotalAmount() != 300 {
 		t.Fatalf("the total received was not what was expected")

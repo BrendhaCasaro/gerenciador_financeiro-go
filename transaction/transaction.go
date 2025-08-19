@@ -16,8 +16,8 @@ type Transaction struct {
 	DeletedAt   time.Time
 }
 
-func NewTransaction(name string, description string, value float64, realizedAt time.Time) Transaction {
-	return Transaction{
+func NewTransaction(name string, description string, value float64, realizedAt time.Time) *Transaction {
+	return &Transaction{
 		Id:          uuid.New(),
 		Name:        name,
 		Description: description,
