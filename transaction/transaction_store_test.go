@@ -40,3 +40,25 @@ func TestMarshalJson(t *testing.T) {
 		t.Fatalf("The transaction was not converted for a JSON: %v", err)
 	}
 }
+
+func TestTotalAmount(t *testing.T) {
+	ts := TransactionStore{}
+
+	ts.Insert(NewTransaction("teste1", "teste1", 100, time.Now()))
+	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
+
+	if ts.TotalAmount() != 300 {
+		t.Fatalf("the total received was not what was expected")
+	}
+}
+
+func TestSoftDelete(t *testing.T) {
+	ts := TransactionStore{}
+	ts.Insert(NewTransaction("teste1", "teste1", 100, time.Now()))
+
+	ts.SoftDelete(ts.store[0].Id)
+
+	if ts.store[0].DeletedAt.IsZero() {
+		t.Fatalf("The function didn't change the time of DeletedAt")
+	}
+}
