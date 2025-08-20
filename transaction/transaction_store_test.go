@@ -23,7 +23,6 @@ func TestMarshalJson(t *testing.T) {
 func TestInsert(t *testing.T) {
 	ts := TransactionStore{}
 	ts.Insert(NewTransaction("teste", "teste", 100, time.Now()))
-	fmt.Print(ts.store[0])
 
 	if len(ts.store) == 0 {
 		t.Fatalf("The fields of transaction should not be nil")
@@ -70,5 +69,19 @@ func TestSoftDelete(t *testing.T) {
 
 	if ts.store[0].DeletedAt.IsZero() {
 		t.Fatalf("The function didn't change the time of DeletedAt")
+	}
+}
+
+func TestHardDelete(t *testing.T) {
+	ts := TransactionStore{}
+	ts.Insert(NewTransaction("teste1", "teste1", 100, time.Now()))
+	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
+	tx := NewTransaction("teste3", "teste3", 100, time.Now())
+	ts.Insert(tx)
+
+	ts.HardDelete(tx.Id)
+
+	if len(ts.store) != 2 {
+		t.Fatalf("The function didn't remove the transaction")
 	}
 }

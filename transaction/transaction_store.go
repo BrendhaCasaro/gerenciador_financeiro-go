@@ -50,3 +50,13 @@ func (ts *TransactionStore) SoftDelete(id uuid.UUID) error {
 
 	return nil
 }
+
+func (ts *TransactionStore) HardDelete(id uuid.UUID) {
+	for i := range ts.store {
+		if ts.store[i].Id == id {
+			ts.store[i] = ts.store[len(ts.store)-1]
+			ts.store = ts.store[:len(ts.store)-1]
+			break
+		}
+	}
+}
