@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -58,5 +59,21 @@ func (ts *TransactionStore) HardDelete(id uuid.UUID) {
 			ts.store = ts.store[:len(ts.store)-1]
 			break
 		}
+	}
+}
+
+func (ts *TransactionStore) EditById(id uuid.UUID, fields TransactionFields) {
+	type TransactionFields struct {
+		name        string
+		description string
+		value       float64
+		realizedAt  time.Time
+	}
+
+	tx, err := ts.SearchById(id)
+
+	if err != nil {
+		fmt.Errorf("Have a error: %v", err)
+		return
 	}
 }
