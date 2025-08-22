@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -71,4 +72,41 @@ func (ts *TransactionStore) EditById(id uuid.UUID, uft UpdateFieldsTransaction) 
 	tx.Update(uft)
 }
 
-func (ts *TransactionStore) ExpensesAmount() {}
+func (ts *TransactionStore) ExpensesAmount() float64 {
+	acc := 0.0
+	for _, transaction := range ts.store {
+		if transaction.DeletedAt.IsZero() && transaction.Value < 0.0 {
+			acc += transaction.Value
+		}
+	}
+	return acc
+}
+
+func (ts *TransactionStore) IncomeAmount() float64 {
+	acc := 0.0
+	for _, transaction := range ts.store {
+		if transaction.DeletedAt.IsZero() && transaction.Value > 0.0 {
+			acc += transaction.Value
+		}
+	}
+	return acc
+}
+
+func (ts *TransactionStore) SearchByName(name string) ([]*Transaction, error) {
+	var results []*Transaction
+	for _, transaction := range ts.store {
+		if strings.Contains(transaction.Name, name) {
+			results = append(results, transaction)
+		}
+	}
+
+	if len(results) == 0 {
+		return nil, errors.New("Transaction not found")
+	}
+
+	return results, nil
+}
+
+func (ts *TransactionStore) FilterByValue(value float64) {}
+
+func (ts *TransactionStore) FilterByType() {}
