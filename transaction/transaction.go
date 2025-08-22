@@ -30,3 +30,28 @@ func NewTransaction(name string, description string, value float64, realizedAt t
 func (t *Transaction) Delete() {
 	t.DeletedAt = time.Now()
 }
+
+type UpdateFieldsTransaction struct {
+	Name        string
+	Description *string
+	Value       float64
+	RealizedAt  time.Time
+}
+
+func (t *Transaction) Update(uft UpdateFieldsTransaction) {
+	if uft.Name != "" {
+		t.Name = uft.Name
+	}
+
+	if uft.Description != nil {
+		t.Description = *uft.Description
+	}
+
+	if uft.Value != 0.0 {
+		t.Value = uft.Value
+	}
+
+	if !uft.RealizedAt.IsZero() {
+		t.RealizedAt = uft.RealizedAt
+	}
+}

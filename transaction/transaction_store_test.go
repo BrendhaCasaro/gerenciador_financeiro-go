@@ -49,14 +49,14 @@ func TestSearchById(t *testing.T) {
 func TestTotalAmount(t *testing.T) {
 	ts := TransactionStore{}
 
-	ts.Insert(NewTransaction("teste1", "teste1", 100, time.Now()))
+	ts.Insert(NewTransaction("teste1", "teste1", -100, time.Now()))
 	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
 	tx := NewTransaction("teste3", "teste3", 100, time.Now())
 	ts.Insert(tx)
 
 	tx.Delete()
 
-	if ts.TotalAmount() != 300 {
+	if ts.TotalAmount() != 100 {
 		t.Fatalf("the total received was not what was expected")
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -62,18 +61,14 @@ func (ts *TransactionStore) HardDelete(id uuid.UUID) {
 	}
 }
 
-func (ts *TransactionStore) EditById(id uuid.UUID, fields TransactionFields) {
-	type TransactionFields struct {
-		name        string
-		description string
-		value       float64
-		realizedAt  time.Time
-	}
-
+func (ts *TransactionStore) EditById(id uuid.UUID, uft UpdateFieldsTransaction) {
 	tx, err := ts.SearchById(id)
-
 	if err != nil {
-		fmt.Errorf("Have a error: %v", err)
+		fmt.Printf("Have a error: %v", err)
 		return
 	}
+
+	tx.Update(uft)
 }
+
+func (ts *TransactionStore) ExpensesAmount() {}
