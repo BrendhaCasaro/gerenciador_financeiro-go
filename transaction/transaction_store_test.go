@@ -85,3 +85,22 @@ func TestHardDelete(t *testing.T) {
 		t.Fatalf("The function didn't remove the transaction")
 	}
 }
+
+func TestEditById(t *testing.T) {
+	ts := TransactionStore{}
+	tx := NewTransaction("teste3", "teste3", 100, time.Now())
+	ts.Insert(tx)
+
+	ts.EditById(tx.Id, UpdateFieldsTransaction{
+		Name:  "Compra",
+		Value: 200,
+	})
+
+	if tx.Name != "Compra" && tx.Value != 200 {
+		t.Fatalf("The function not change the name and the value of transaction")
+	}
+}
+
+func TestExpensesAmount(t *testing.T) {
+
+}
