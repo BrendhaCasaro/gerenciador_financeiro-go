@@ -55,3 +55,10 @@ func (t *Transaction) Update(uft UpdateFieldsTransaction) {
 		t.RealizedAt = uft.RealizedAt
 	}
 }
+
+type TransactionType int
+
+const (
+	Income TransactionType = iota
+	Expense
+)

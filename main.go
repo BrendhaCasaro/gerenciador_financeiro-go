@@ -13,7 +13,7 @@ func main() {
 
 	ts.Insert(tx)
 
-	store, err := (ts.MarshalJson())
+	store, err := (ts.MarshalJSON())
 	if err != nil {
 		fmt.Print(err)
 	}

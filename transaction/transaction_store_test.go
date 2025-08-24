@@ -11,9 +11,9 @@ func TestMarshalJson(t *testing.T) {
 	tx := NewTransaction("teste", "teste", 100, time.Now())
 	ts.Insert(tx)
 
-	storeJson, err := ts.MarshalJson()
+	storeJSON, err := ts.MarshalJSON()
 
-	fmt.Println(string(storeJson))
+	fmt.Println(string(storeJSON))
 
 	if err != nil {
 		t.Fatalf("The slice was not converted for a JSON: %v", err)
@@ -36,7 +36,7 @@ func TestSearchById(t *testing.T) {
 	ts.Insert(NewTransaction("teste2", "teste2", 200, time.Now()))
 
 	transactionSearch := ts.store[1].Id
-	transactionFound, err := ts.SearchById(transactionSearch)
+	transactionFound, err := ts.SearchByID(transactionSearch)
 	if err != nil {
 		t.Fatalf("Have a error: %v", err)
 	}
@@ -86,12 +86,12 @@ func TestHardDelete(t *testing.T) {
 	}
 }
 
-func TestEditById(t *testing.T) {
+func TestEditByID(t *testing.T) {
 	ts := TransactionStore{}
 	tx := NewTransaction("teste3", "teste3", 100, time.Now())
 	ts.Insert(tx)
 
-	ts.EditById(tx.Id, UpdateFieldsTransaction{
+	ts.EditByID(tx.Id, UpdateFieldsTransaction{
 		Name:  "Compra",
 		Value: 200,
 	})
@@ -102,5 +102,4 @@ func TestEditById(t *testing.T) {
 }
 
 func TestExpensesAmount(t *testing.T) {
-
 }
