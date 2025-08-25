@@ -117,7 +117,7 @@ func (ts *TransactionStore) FilterByValue(init float64, end float64) []*Transact
 	return results
 }
 
-func (ts *TransactionStore) FilterByType(tt TransactionType) ([]*Transaction, error) {
+func (ts *TransactionStore) FilterByType(tt TransactionType) []*Transaction {
 	var results []*Transaction
 	for _, transaction := range ts.store {
 		if transaction.DeletedAt.IsZero() && transaction.Value > 0.0 && tt == Income {
@@ -126,5 +126,5 @@ func (ts *TransactionStore) FilterByType(tt TransactionType) ([]*Transaction, er
 			results = append(results, transaction)
 		}
 	}
-	return results, nil
+	return results
 }
