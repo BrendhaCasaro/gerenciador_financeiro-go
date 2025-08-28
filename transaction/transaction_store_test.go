@@ -67,7 +67,7 @@ func TestSoftDelete(t *testing.T) {
 
 	ts.SoftDelete(ts.store[0].Id)
 
-	if ts.store[0].DeletedAt.IsZero() {
+	if ts.store[0].deletedAt.IsZero() {
 		t.Fatalf("The function didn't change the time of DeletedAt")
 	}
 }
@@ -133,7 +133,6 @@ func TestSearchByName(t *testing.T) {
 	ts.Insert(tx)
 
 	transactionsFound, err := ts.SearchByName("teste3")
-
 	if err != nil {
 		t.Fatalf("Have an error %v", err)
 	}

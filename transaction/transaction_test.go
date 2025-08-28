@@ -22,7 +22,7 @@ func TestDeleteTransaction(t *testing.T) {
 
 	transaction.Delete()
 
-	if transaction.DeletedAt.IsZero() {
+	if transaction.deletedAt.IsZero() {
 		t.Fatalf("The function Delete didn't work")
 	}
 }

@@ -7,13 +7,13 @@ import (
 )
 
 type Transaction struct {
-	Id          uuid.UUID
-	Name        string
-	Description string
-	Value       float64
-	InsertedAt  time.Time
-	RealizedAt  time.Time
-	DeletedAt   time.Time
+	Id          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Value       float64   `json:"value"`
+	insertedAt  time.Time
+	RealizedAt  time.Time `json:"realized_at"`
+	deletedAt   time.Time
 }
 
 func NewTransaction(name string, description string, value float64, realizedAt time.Time) *Transaction {
@@ -22,13 +22,13 @@ func NewTransaction(name string, description string, value float64, realizedAt t
 		Name:        name,
 		Description: description,
 		Value:       value,
-		InsertedAt:  time.Now(),
+		insertedAt:  time.Now(),
 		RealizedAt:  realizedAt,
 	}
 }
 
 func (t *Transaction) Delete() {
-	t.DeletedAt = time.Now()
+	t.deletedAt = time.Now()
 }
 
 type UpdateFieldsTransaction struct {

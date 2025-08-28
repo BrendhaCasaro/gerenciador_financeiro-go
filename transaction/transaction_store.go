@@ -17,6 +17,10 @@ func (ts *TransactionStore) MarshalJSON() ([]byte, error) {
 	return json.Marshal(ts.store)
 }
 
+func (ts *TransactionStore) ListTransactions() []*Transaction {
+	return ts.store
+}
+
 func (ts *TransactionStore) Insert(transaction *Transaction) {
 	ts.store = append(ts.store, transaction)
 }
@@ -34,7 +38,7 @@ func (ts *TransactionStore) SearchByID(id uuid.UUID) (*Transaction, error) {
 func (ts *TransactionStore) TotalAmount() float64 {
 	acc := 0.0
 	for _, transaction := range ts.store {
-		if transaction.DeletedAt.IsZero() {
+		if transaction.deletedAt.IsZero() {
 			acc += transaction.Value
 		}
 	}
@@ -75,7 +79,7 @@ func (ts *TransactionStore) EditByID(id uuid.UUID, uft UpdateFieldsTransaction) 
 func (ts *TransactionStore) ExpensesAmount() float64 {
 	acc := 0.0
 	for _, transaction := range ts.store {
-		if transaction.DeletedAt.IsZero() && transaction.Value < 0.0 {
+		if transaction.deletedAt.IsZero() && transaction.Value < 0.0 {
 			acc += transaction.Value
 		}
 	}
@@ -85,7 +89,7 @@ func (ts *TransactionStore) ExpensesAmount() float64 {
 func (ts *TransactionStore) IncomeAmount() float64 {
 	acc := 0.0
 	for _, transaction := range ts.store {
-		if transaction.DeletedAt.IsZero() && transaction.Value > 0.0 {
+		if transaction.deletedAt.IsZero() && transaction.Value > 0.0 {
 			acc += transaction.Value
 		}
 	}
@@ -110,7 +114,7 @@ func (ts *TransactionStore) SearchByName(name string) ([]*Transaction, error) {
 func (ts *TransactionStore) FilterByValue(init float64, end float64) []*Transaction {
 	var results []*Transaction
 	for _, transaction := range ts.store {
-		if transaction.DeletedAt.IsZero() && transaction.Value >= init && transaction.Value <= end {
+		if transaction.deletedAt.IsZero() && transaction.Value >= init && transaction.Value <= end {
 			results = append(results, transaction)
 		}
 	}
@@ -120,9 +124,9 @@ func (ts *TransactionStore) FilterByValue(init float64, end float64) []*Transact
 func (ts *TransactionStore) FilterByType(tt TransactionType) []*Transaction {
 	var results []*Transaction
 	for _, transaction := range ts.store {
-		if transaction.DeletedAt.IsZero() && transaction.Value > 0.0 && tt == Income {
+		if transaction.deletedAt.IsZero() && transaction.Value > 0.0 && tt == Income {
 			results = append(results, transaction)
-		} else if transaction.DeletedAt.IsZero() && tt == Expense {
+		} else if transaction.deletedAt.IsZero() && tt == Expense {
 			results = append(results, transaction)
 		}
 	}
