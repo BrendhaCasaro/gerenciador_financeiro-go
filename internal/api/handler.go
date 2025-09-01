@@ -10,10 +10,10 @@ import (
 )
 
 type Server struct {
-	ts transaction.TransactionStore
+	ts *transaction.TransactionStore
 }
 
-func NewServer(ts transaction.TransactionStore) *Server {
+func NewServer(ts *transaction.TransactionStore) *Server {
 	return &Server{
 		ts: ts,
 	}
@@ -35,5 +35,21 @@ func (s *Server) HandleListTransactions(w http.ResponseWriter, _ *http.Request) 
 	_, err = w.Write(jsonResponse)
 	if err != nil {
 		log.Printf("Error writing response: %v", err)
+	}
+}
+
+func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
+	// receber o body da request
+	// converter de json para struct transaction os dados da transação
+	// inserir a struct na store
+	// retornar 201 da execução
+	// retornar no header um campo location que o campo seja o id da transaction
+
+	var tx transaction.Transaction
+	err := json.NewDecoder(r.Body).Decode(&tx)
+	if err != nil {
+		http.Error(w, "Error: decoding body", http.StatusInternalServerError)
+		log.Println(err)
+		return
 	}
 }

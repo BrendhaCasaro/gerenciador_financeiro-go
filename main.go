@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/BrendhaCasaro/gerenciador_financeiro-go/internal/api"
 	"github.com/BrendhaCasaro/gerenciador_financeiro-go/transaction"
@@ -13,16 +12,14 @@ import (
 // Adicionar uma transação
 // Deletar uma transação
 // Editar uma transação
+// Procurar uma transação específica
+// filtrar por tipo e valor
 
 func main() {
 	store := transaction.TransactionStore{}
-	server := api.NewServer(store)
-	server.ts.Insert(transaction.NewTransaction("teste", "teste", 100, time.Now()))
+	server := api.NewServer(&store)
 
-
-	http.HandleFunc("GET /health-check", s.HandleHealthCheck)
-	http.HandleFunc("GET /transactions", s.HandleListTransactions)
-
+	server.DefineRoutes()
+	log.Println("Server starting on :42069")
 	http.ListenAndServe(":42069", nil)
-	log.Println("Server starting on :8080")
 }
