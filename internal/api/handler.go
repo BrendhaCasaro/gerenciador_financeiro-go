@@ -58,3 +58,6 @@ func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Location", "/transactions/"+tInserted.Id.String())
 	w.WriteHeader(http.StatusCreated)
 }
+
+func (s *Server) HandleDeleteTransaction(w http.ResponseWriter, r *http.Request) {
+}
