@@ -18,7 +18,13 @@ func (ts *TransactionStore) MarshalJSON() ([]byte, error) {
 }
 
 func (ts *TransactionStore) ListTransactions() []*Transaction {
-	return ts.store
+	var results []*Transaction
+	for _, transaction := range ts.store {
+		if transaction.deletedAt.IsZero() {
+			results = append(results, transaction)
+		}
+	}
+	return results
 }
 
 func (ts *TransactionStore) Insert(transaction *Transaction) {

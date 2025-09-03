@@ -10,9 +10,9 @@ import (
 
 // Listar transação (na mesma tela, é necessário ter a diferença entre as receitas e as despesas, junto com as mesmas)
 // Adicionar uma transação
+// Procurar uma transação específica
 // Deletar uma transação
 // Editar uma transação
-// Procurar uma transação específica
 // filtrar por tipo e valor
 
 func main() {

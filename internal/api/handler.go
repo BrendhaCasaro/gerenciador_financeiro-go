@@ -53,3 +53,6 @@ func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (s *Server) HandleDeleteTransaction(w http.ResponseWriter, r *http.Request) {
+}
