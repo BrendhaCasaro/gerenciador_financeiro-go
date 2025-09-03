@@ -52,4 +52,9 @@ func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+
+	tInserted := s.ts.Insert(transaction.NewTransaction(tx.Name, tx.Description, tx.Value, tx.RealizedAt))
+
+	w.Header().Set("Location", "/transactions/"+tInserted.Id.String())
+	w.WriteHeader(http.StatusCreated)
 }

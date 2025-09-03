@@ -21,8 +21,9 @@ func (ts *TransactionStore) ListTransactions() []*Transaction {
 	return ts.store
 }
 
-func (ts *TransactionStore) Insert(transaction *Transaction) {
+func (ts *TransactionStore) Insert(transaction *Transaction) *Transaction {
 	ts.store = append(ts.store, transaction)
+	return transaction
 }
 
 func (ts *TransactionStore) SearchByID(id uuid.UUID) (*Transaction, error) {
