@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/BrendhaCasaro/gerenciador_financeiro-go/transaction"
+	"github.com/google/uuid"
 )
 
 type Server struct {
@@ -26,7 +27,8 @@ func (s *Server) HandleHealthCheck(w http.ResponseWriter, _ *http.Request) {
 func (s *Server) HandleListTransactions(w http.ResponseWriter, _ *http.Request) {
 	jsonResponse, err := json.Marshal(s.ts.ListTransactions())
 	if err != nil {
-		http.Error(w, "Error marshaling JSON", http.StatusInternalServerError)
+		http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
+		log.Printf("Error writing response of request: %v", err)
 		return
 	}
 
@@ -34,17 +36,12 @@ func (s *Server) HandleListTransactions(w http.ResponseWriter, _ *http.Request) 
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(jsonResponse)
 	if err != nil {
+		http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
 		log.Printf("Error writing response: %v", err)
 	}
 }
 
 func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
-	// receber o body da request
-	// converter de json para struct transaction os dados da transação
-	// inserir a struct na store
-	// retornar 201 da execução
-	// retornar no header um campo location que o campo seja o id da transaction
-
 	var tx transaction.Transaction
 	err := json.NewDecoder(r.Body).Decode(&tx)
 	if err != nil {
@@ -60,4 +57,71 @@ func (s *Server) HandleAddTransaction(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) HandleDeleteTransaction(w http.ResponseWriter, r *http.Request) {
+	idReq, errParse := uuid.Parse(r.PathValue("id"))
+	if errParse != nil {
+		http.Error(w, "Error to parse the ID", http.StatusUnprocessableEntity)
+		log.Printf("Error to parse the ID: %v", errParse)
+		return
+	}
+	_, err := s.ts.SearchByID(idReq)
+	if err != nil {
+		http.Error(w, "Transaction not found", http.StatusNotFound)
+		log.Printf("Error to find transaction: %v", err)
+		return
+	}
+
+	s.ts.SoftDelete(idReq)
+}
+
+func (s *Server) HandleFindTransaction(w http.ResponseWriter, r *http.Request) {
+	idReq, errParse := uuid.Parse(r.PathValue("id"))
+	if errParse != nil {
+		http.Error(w, "Error to parse the ID", http.StatusUnprocessableEntity)
+		log.Printf("Error to parse the ID: %v", errParse)
+		return
+	}
+
+	transaction, err := s.ts.SearchByID(idReq)
+	if err != nil {
+		http.Error(w, "Transaction not found", http.StatusNotFound)
+		log.Printf("Error to find transaction: %v", err)
+		return
+	}
+
+	jsonResponse, errMarshal := json.Marshal(transaction)
+	if errMarshal != nil {
+		http.Error(w, "Error to return a transaction", http.StatusUnprocessableEntity)
+		log.Printf("Error to marshal the transaction: %v", errMarshal)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, errWrite := w.Write(jsonResponse)
+	if errWrite != nil {
+		http.Error(w, "Error to return the transaction", http.StatusUnprocessableEntity)
+		log.Printf("Error writing response of request: %v", err)
+		return
+	}
+}
+
+func (s *Server) HandleEditTransaction(w http.ResponseWriter, r *http.Request) {
+	idReq, errParse := uuid.Parse(r.PathValue("id"))
+	if errParse != nil {
+		http.Error(w, "Internal error", http.StatusUnprocessableEntity)
+		log.Printf("Error to parse the ID: %v", errParse)
+		return
+	}
+
+	var tx transaction.UpdateFieldsTransaction
+	errDecoder := json.NewDecoder(r.Body).Decode(&tx)
+	if errDecoder != nil {
+		http.Error(w, "Internal error", http.StatusUnprocessableEntity)
+		log.Printf("Error to decode the request body to a transaction type %v", errDecoder)
+	}
+
+	s.ts.EditByID(idReq, tx)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNoContent)
 }

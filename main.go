@@ -10,8 +10,8 @@ import (
 
 // Listar transação (na mesma tela, é necessário ter a diferença entre as receitas e as despesas, junto com as mesmas)
 // Adicionar uma transação
-// Procurar uma transação específica
 // Deletar uma transação
+// Achar uma transação específica
 // Editar uma transação
 // filtrar por tipo e valor
 

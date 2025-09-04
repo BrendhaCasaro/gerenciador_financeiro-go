@@ -32,10 +32,10 @@ func (t *Transaction) Delete() {
 }
 
 type UpdateFieldsTransaction struct {
-	Name        string
-	Description *string
-	Value       float64
-	RealizedAt  time.Time
+	Name        string    `json:"name"`
+	Description *string   `json:"description"`
+	Value       float64   `json:"value"`
+	RealizedAt  time.Time `json:"realized_at"`
 }
 
 func (t *Transaction) Update(uft UpdateFieldsTransaction) {

@@ -39,7 +39,7 @@ func (ts *TransactionStore) SearchByID(id uuid.UUID) (*Transaction, error) {
 		}
 	}
 
-	return nil, errors.New("Transaction not found")
+	return nil, errors.New("Transaction not exist")
 }
 
 func (ts *TransactionStore) TotalAmount() float64 {
