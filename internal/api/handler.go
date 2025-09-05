@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/BrendhaCasaro/gerenciador_financeiro-go/transaction"
 	"github.com/google/uuid"
@@ -24,19 +25,57 @@ func (s *Server) HandleHealthCheck(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, "Hello World")
 }
 
-func (s *Server) HandleListTransactions(w http.ResponseWriter, _ *http.Request) {
-	jsonResponse, err := json.Marshal(s.ts.ListTransactions())
+func (s *Server) HandleListTransactions(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	var transactions []*transaction.Transaction
+
+	if t := query.Get("type"); t != "" {
+		switch t {
+		case "income":
+			transactions = s.ts.FilterByType(transaction.Income)
+
+		case "expense":
+			transactions = s.ts.FilterByType(transaction.Expense)
+
+		default:
+			http.Error(w, "Invalid type filter", http.StatusBadRequest)
+			return
+		}
+	}
+
+	if query.Has("init") && query.Has("end") {
+		init, err := strconv.ParseFloat(query.Get("init"), 64)
+		if err != nil {
+			http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
+			log.Printf("Error to parse to float of init filter: %v", err)
+			return
+		}
+
+		end, err := strconv.ParseFloat(query.Get("end"), 64)
+		if err != nil {
+			http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
+			log.Printf("Error to parse to float of init filter: %v", err)
+			return
+		}
+
+		transactions = s.ts.FilterByValue(init, end)
+	}
+
+	if transactions == nil {
+		transactions = s.ts.ListTransactions()
+	}
+
+	jsonResponse, err := json.Marshal(transactions)
 	if err != nil {
-		http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
-		log.Printf("Error writing response of request: %v", err)
+		http.Error(w, "Error serializing transactions", http.StatusInternalServerError)
+		log.Printf("Error marshalling json: %v", err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(jsonResponse)
-	if err != nil {
-		http.Error(w, "Error to return the transactions", http.StatusUnprocessableEntity)
+	if _, err := w.Write(jsonResponse); err != nil {
+		http.Error(w, "Error writing response", http.StatusInternalServerError)
 		log.Printf("Error writing response: %v", err)
 	}
 }

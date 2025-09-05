@@ -133,7 +133,7 @@ func (ts *TransactionStore) FilterByType(tt TransactionType) []*Transaction {
 	for _, transaction := range ts.store {
 		if transaction.deletedAt.IsZero() && transaction.Value > 0.0 && tt == Income {
 			results = append(results, transaction)
-		} else if transaction.deletedAt.IsZero() && tt == Expense {
+		} else if transaction.deletedAt.IsZero() && transaction.Value < 0.0 && tt == Expense {
 			results = append(results, transaction)
 		}
 	}

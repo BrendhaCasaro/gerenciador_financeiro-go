@@ -168,12 +168,21 @@ func TestFilterByType(t *testing.T) {
 	tx := NewTransaction("teste3", "teste3", 100, time.Now())
 	ts.Insert(tx)
 
-	transactionsFound := ts.FilterByType(Income)
+	transactionsIncome:= ts.FilterByType(Income)
 
-	for _, transaction := range transactionsFound {
+	for _, transaction := range transactionsIncome {
 		fmt.Printf("Transaction: %v\n", transaction)
 		if transaction.Value < 0 {
-			t.Fatalf("The function returned the wrong transaction")
+			t.Fatalf("The function returned the wrong transactions")
+		}
+	}
+
+	transactionsExpense := ts.FilterByType(Expense)
+	
+	for _, transaction := range transactionsExpense {
+		fmt.Printf("Transaction: %v\n", transaction)
+		if transaction.Value > 0 {
+			t.Fatalf("The function returned the wrong transactions")
 		}
 	}
 }
